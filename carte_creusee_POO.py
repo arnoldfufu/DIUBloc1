@@ -3,14 +3,7 @@ import pygame
 from constantes import *
 from pygame.locals import *
 
-largeur = LARGEUR
-hauteur = HAUTEUR
 taille = TAILLE
-
-pygame.init()
-fenetre = pygame.display.set_mode((largeur * taille, hauteur * taille))
-pygame.display.set_caption("Creuser !")
-continuer = True
 
 ###### Version POO ####
 class Carte:
@@ -18,8 +11,10 @@ class Carte:
 
     def __init__(self, largeur, hauteur):
         """Génère une carte pleine de 1"""
+        pygame.init()
         self.largeur = LARGEUR
         self.hauteur = HAUTEUR
+        self.fenetre = pygame.display.set_mode((self.largeur * taille, self.hauteur * taille))
         self.carte = []
         grille = []
         for ligne in range(hauteur):
@@ -160,11 +155,13 @@ class Carte:
         return liste
     def affichage_graphique(self):
         """Affichage graphique"""
+
         for l in range(self.hauteur):
             for c in range(self.largeur):
-                pygame.draw.rect(fenetre, (0, 0, 255 * self.carte[l][c]), (taille * c, taille * l, taille, taille), 0)
+                pygame.draw.rect(self.fenetre, (0, 0, 255 * self.carte[l][c]), (taille * c, taille * l, taille, taille), 0)
         pygame.display.flip()
         pygame.time.delay(200)
+
 #### FIN VErsion POO
 ##########################################################################################
 def newCarteAvecDepartEtArrivee(largeur, hauteur):
@@ -175,11 +172,11 @@ def newCarteAvecDepartEtArrivee(largeur, hauteur):
     nouvelle[y][x] = 4252
     return nouvelle
 
-carteobjet = Carte(largeur, hauteur)
+carteobjet = Carte(LARGEUR, HAUTEUR)
 carteobjet.new_carte()
 
-
-
-
 pygame.quit()
+
+
+
 
