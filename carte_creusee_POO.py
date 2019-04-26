@@ -3,16 +3,13 @@ import pygame
 from constantes import *
 from pygame.locals import *
 
-
 largeur = LARGEUR
 hauteur = HAUTEUR
 taille = TAILLE
 
 pygame.init()
-
 fenetre = pygame.display.set_mode((largeur * taille, hauteur * taille))
 pygame.display.set_caption("Creuser !")
-
 continuer = True
 
 ###### Version POO ####
@@ -31,9 +28,36 @@ class Carte:
                 grille[ligne].append(1)
         self.carte = grille
 
+    def affiche_carte(self):
+        """Méthode d'affichage de la carte en console"""
+        for ligne in range(self.hauteur):
+            for colonne in range(self.largeur):
+                print(self.carte[ligne][colonne], end='')
+            print()
+        print()
 
+    def origine_initiale(self):
+        """ Point de départ aléatoire"""
+        x = randrange(self.largeur // 2)
+        y = randrange(self.hauteur // 2)
+        return 2 * x + 1, 2 * y + 1
 
+    def creuse_autour(self, x, y):  # Méthode non utilisée pour le moment
+        """Méthode pour creuser autour du point (x,y)"""
+        if x + 1 < self.largeur - 1: self.carte[y][x + 1] = 0
+        if x - 1 > 0: self.carte[y][x - 1] = 0
+        if y + 1 < self.hauteur - 1: self.carte[y + 1][x] = 0
+        if y - 1 > 0: self.carte[y - 2][x] > 0
+
+    def nb_cases_encore_a_creuser(self):
+        """Nombre de cases qu'il reste à creuser"""
+        somme = 0
+        for x in range(self.largeur // 2):
+            for y in range(self.hauteur // 2):
+                somme += self.carte[2 * y + 1][2 * x + 1]
+        return somme
 #### FIN VErsion POO
+##########################################################################################
 def bascule():
     global carte
     for l in range(hauteur):
@@ -42,8 +66,6 @@ def bascule():
     pygame.display.flip()
     pygame.time.delay(200)
 
-
-
 def copieCarte(c, largeur, hauteur):
     copie = []
     for ligne in range(hauteur):
@@ -51,21 +73,11 @@ def copieCarte(c, largeur, hauteur):
         for colonne in range(largeur):
             copie[ligne].append(c[ligne][colonne])
     return copie
-
-
 def origineInitiale(carte, largeur, hauteur):
+    """ Point de départ aléatoire"""
     x = randrange(largeur // 2)
     y = randrange(hauteur // 2)
     return 2 * x + 1, 2 * y + 1
-
-
-def afficheCarte(carte, largeur, hauteur):
-    for ligne in range(hauteur):
-        for colonne in range(largeur):
-            print(carte[ligne][colonne], end='')
-        print()
-    print()
-
 
 def nbreCasesEncoreACreuser(carte, largeur, hauteur):
     somme = 0
@@ -73,7 +85,6 @@ def nbreCasesEncoreACreuser(carte, largeur, hauteur):
         for y in range(hauteur // 2):
             somme += carte[2 * y + 1][2 * x + 1]
     return somme
-
 
 def destinationsPossibles(carte, x, y, largeur, hauteur):
     liste = []
@@ -87,7 +98,6 @@ def destinationsPossibles(carte, x, y, largeur, hauteur):
         liste.append(1)
     return liste
 
-
 def destinationsPossiblesAvecZero(carte, x, y, largeur, hauteur):
     liste = []
     if x + 2 < largeur - 1:
@@ -99,14 +109,6 @@ def destinationsPossiblesAvecZero(carte, x, y, largeur, hauteur):
     if y - 2 > 0:
         liste.append(1)
     return liste
-
-
-def creuseAutour(carte, x, y, largeur, hauteur):
-    if x + 1 < largeur - 1: carte[y][x + 1] = 0
-    if x - 1 > 0: carte[y][x - 1] = 0
-    if y + 1 < hauteur - 1: carte[y + 1][x] = 0
-    if y - 1 > 0: carte[y - 2][x] > 0
-
 
 def nouveauCheminDepuis(carte, x, y, largeur, hauteur, t):
     carte[y][x] = 0
@@ -140,7 +142,6 @@ def nouveauCheminDepuis(carte, x, y, largeur, hauteur, t):
         else:
             return
 
-
 # ne marche pas
 def nouveauCheminJusqueZeroPasDansCheminEnCours(carte, x0, y0, largeur, hauteur):
     x, y = x0, y0  # pour rentrer dans while
@@ -172,19 +173,19 @@ def nouveauCheminJusqueZeroPasDansCheminEnCours(carte, x0, y0, largeur, hauteur)
 
 def newCarte(largeur, hauteur):
     global carte
-
     carteobjet = Carte(largeur, hauteur)
+    carteobjet.affiche_carte()
     carte = carteobjet.carte
-    # afficheCarte(carte,largeur,hauteur)
-    if nbreCasesEncoreACreuser(carte, largeur, hauteur) > 0:
-        x0, y0 = origineInitiale(carte, largeur, hauteur)
+    ##
+
+    if carteobjet.nb_cases_encore_a_creuser() > 0:
+        x0, y0 = carteobjet.origine_initiale()
         t = ((largeur) // 2 * (hauteur) // 2) // 3
         nouveauCheminDepuis(carte, x0, y0, largeur, hauteur, t)
     # afficheCarte(carte,largeur,hauteur)
-    while nbreCasesEncoreACreuser(carte, largeur, hauteur) > 0:
+    while carteobjet.nb_cases_encore_a_creuser() > 0:
         nouveauCheminJusqueZeroPasDansCheminEnCours(carte, x0, y0, largeur, hauteur)
         # afficheCarte(carte,largeur,hauteur)
-
     return carte
 
 
