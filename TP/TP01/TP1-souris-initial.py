@@ -33,9 +33,11 @@ while continuer:
                 elif event.type == MOUSEBUTTONDOWN :
                         (xclic, yclic) = event.pos
                         print("Clic en ("+str(xclic)+", "+str(yclic)+")")
-                        pygame.draw.circle(fenetre,(255, 255, 255),(xclic, yclic), 20, 0)
+                        pygame.draw.circle(fenetre, COULEUR_CERCLE,
+                                           (xclic, yclic), 20, 0)
                 elif event.type == MOUSEMOTION :
                         (x, y) = event.pos
-                        pygame.draw.rect(fenetre, COULEUR_TRAIT, (x-5, y-4, 10, 8), 0)
+                        pygame.draw.rect(fenetre, COULEUR_TRAIT,
+                                         (x-5, y-4, 10, 8), 0)
         pygame.display.flip()
 pygame.quit()
