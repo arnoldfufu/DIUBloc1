@@ -1,7 +1,6 @@
 from random import randrange, choice
 import pygame
 from constantes import *
-from pygame.locals import *
 
 taille = TAILLE
 
